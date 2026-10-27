@@ -1,0 +1,347 @@
+<!doctype html>
+<!-- © 2026 گروه معامله‌گری بتا آپشن. همه حقوق محفوظ است. -->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>کوییز اختیار معامله</title>
+<style>
+:root{
+  --bg:#f5f7f8; --card:#ffffff; --text:#1b2428; --muted:#66757c; --line:#dfe5e8;
+  --brand:#0f766e; --brand-ink:#ffffff; --ok:#15803d; --ok-bg:#dcfce7; --bad:#b91c1c; --bad-bg:#fee2e2; --chip:#e8eef0;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#10181b; --card:#18242a; --text:#e8eef0; --muted:#93a4ab; --line:#2a3a41;
+    --brand:#2dd4bf; --brand-ink:#08201d; --ok:#4ade80; --ok-bg:#12351f; --bad:#f87171; --bad-bg:#3b1717; --chip:#22323a; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Vazirmatn","Segoe UI",Tahoma,sans-serif;line-height:1.7;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 40px}
+h1{font-size:19px;margin:6px 0 12px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;font:inherit;font-weight:600}
+.tab.on{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{padding:6px 12px;border-radius:999px;border:0;background:var(--chip);color:var(--text);font:inherit;font-size:14px}
+.chip.on{background:var(--brand);color:var(--brand-ink)}
+.stats{display:flex;justify-content:space-between;gap:8px;margin-bottom:12px;font-size:14px;color:var(--muted)}
+.stats b{color:var(--text)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.q{font-size:18px;font-weight:600;margin:0 0 14px;white-space:pre-line}
+.opt{display:block;width:100%;text-align:right;padding:13px 14px;margin-bottom:10px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--card);color:var(--text);font:inherit;font-size:16px}
+.opt:active{transform:scale(.99)}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.opt[disabled]{opacity:1}
+.sub{display:block;font-size:12px;color:var(--muted);direction:ltr;text-align:right}
+.fb{margin-top:6px;font-size:15px}
+.fb .res{font-weight:700;margin-bottom:6px}
+.fb .res.ok{color:var(--ok)} .fb .res.bad{color:var(--bad)}
+.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:var(--brand);color:var(--brand-ink);font:inherit;font-size:16px;font-weight:700;margin-top:10px}
+.btn.alt{background:var(--chip);color:var(--text)}
+.info{font-size:14px;color:var(--text)}
+.info div{margin:2px 0}
+.info span{color:var(--muted)}
+.hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.hd .n{font-weight:700;font-size:17px}
+.hd .e{font-size:12px;color:var(--muted);direction:ltr}
+.bar{height:6px;border-radius:99px;background:var(--chip);overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .25s}
+.center{text-align:center}
+.big{font-size:34px;font-weight:800;margin:6px 0}
+.hide{display:none}
+.foot{font-size:13px;color:var(--muted);text-align:center;margin-top:18px}
+.foot a{color:var(--brand);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>کوییز استراتژی‌های اختیار معامله</h1>
+  <div class="tabs">
+    <button class="tab on" id="tabQuiz">آزمون</button>
+    <button class="tab" id="tabSheet">خلاصه استراتژی‌ها</button>
+  </div>
+
+  <section id="quiz">
+    <div class="chips" id="chips"></div>
+    <div class="stats">
+      <span>درست: <b id="sOk">0</b> از <b id="sAll">0</b></span>
+      <span>پیاپی: <b id="sStreak">0</b></span>
+      <span>اشتباه‌های ثبت‌شده: <b id="sWrong">0</b></span>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="card" id="qcard"></div>
+  </section>
+
+  <section id="sheet" class="hide"></section>
+
+  <div class="foot">کاری از گروه معامله‌گری بتا آپشن<br>
+    <a href="https://t.me/betaoption1" target="_blank" rel="noopener">کانال</a> و
+    <a href="https://t.me/bours_option" target="_blank" rel="noopener">گروه</a> تلگرام ما</div>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- داده استراتژی‌ها ---------- */
+const S = [
+ {id:'bullcall', g:'spread', fa:'بول کال اسپرد', en:'Bull Call Spread',
+  legs:'خرید کال با اعمال پایین و فروش کال با اعمال بالا',
+  view:'صعودی (رشد ملایم قیمت)', vs:'صعودی', cost:'با پرداخت پول باز می‌شود (دبیت)',
+  profit:'فاصله دو اعمال منهای مبلغ پرداختی', loss:'فقط مبلغ پرداختی', lk:'paid'},
+ {id:'bearcall', g:'spread', fa:'بر کال اسپرد', en:'Bear Call Spread',
+  legs:'فروش کال با اعمال پایین و خرید کال با اعمال بالا',
+  view:'نزولی یا بدون رشد زیاد', cost:'با دریافت پول باز می‌شود (کردیت)',
+  profit:'مبلغ دریافتی', loss:'فاصله دو اعمال منهای مبلغ دریافتی', lk:'width'},
+ {id:'bullput', g:'spread', fa:'بول پوت اسپرد', en:'Bull Put Spread',
+  legs:'فروش پوت با اعمال بالا و خرید پوت با اعمال پایین',
+  view:'صعودی یا بدون ریزش زیاد', cost:'با دریافت پول باز می‌شود (کردیت)',
+  profit:'مبلغ دریافتی', loss:'فاصله دو اعمال منهای مبلغ دریافتی', lk:'width'},
+ {id:'bearput', g:'spread', fa:'بر پوت اسپرد', en:'Bear Put Spread',
+  legs:'خرید پوت با اعمال بالا و فروش پوت با اعمال پایین',
+  view:'نزولی', cost:'با پرداخت پول باز می‌شود (دبیت)',
+  profit:'فاصله دو اعمال منهای مبلغ پرداختی', loss:'فقط مبلغ پرداختی', lk:'paid'},
+ {id:'longstraddle', g:'vol', fa:'لانگ استرادل', en:'Long Straddle',
+  legs:'خرید کال و خرید پوت با اعمال یکسان',
+  view:'حرکت شدید قیمت، جهت مهم نیست', cost:'با پرداخت پول باز می‌شود (دبیت)',
+  profit:'بسیار بزرگ (در سمت صعود تقریباً نامحدود)', loss:'فقط مبلغ پرداختی', lk:'paid'},
+ {id:'shortstraddle', g:'vol', fa:'شورت استرادل', en:'Short Straddle',
+  legs:'فروش کال و فروش پوت با اعمال یکسان',
+  view:'قیمت نزدیک اعمال ثابت بماند', cost:'با دریافت پول باز می‌شود (کردیت)',
+  profit:'مبلغ دریافتی', loss:'بسیار بزرگ (تقریباً نامحدود)', lk:'unl'},
+ {id:'longstrangle', g:'vol', fa:'لانگ استرنگل', en:'Long Strangle',
+  legs:'خرید پوت با اعمال پایین و خرید کال با اعمال بالا',
+  view:'حرکت شدید قیمت (ارزان‌تر از استرادل ولی حرکت بیشتری لازم است)', cost:'با پرداخت پول باز می‌شود (دبیت)',
+  profit:'بسیار بزرگ (در سمت صعود تقریباً نامحدود)', loss:'فقط مبلغ پرداختی', lk:'paid'},
+ {id:'shortstrangle', g:'vol', fa:'شورت استرنگل', en:'Short Strangle',
+  legs:'فروش پوت با اعمال پایین و فروش کال با اعمال بالا',
+  view:'قیمت بین دو اعمال بماند', cost:'با دریافت پول باز می‌شود (کردیت)',
+  profit:'مبلغ دریافتی', loss:'بسیار بزرگ (تقریباً نامحدود)', lk:'unl'},
+ {id:'coveredcall', g:'cc', fa:'کاورد کال', en:'Covered Call',
+  legs:'نگهداری سهم پایه و فروش کال',
+  view:'خنثی تا کمی صعودی روی سهمی که داری', cost:'پریمیوم کال را دریافت می‌کنی',
+  profit:'پریمیوم دریافتی به‌علاوه رشد سهم تا قیمت اعمال', loss:'ریزش قیمت سهم (پریمیوم کمی جبران می‌کند)', lk:'stock'},
+ {id:'butterfly', g:'fly', fa:'لانگ باترفلای', en:'Long Butterfly',
+  legs:'خرید کال با اعمال پایین، فروش دو کال با اعمال وسط و خرید کال با اعمال بالا',
+  view:'قیمت در سررسید نزدیک اعمال وسط بماند', cost:'با پرداخت پول باز می‌شود (دبیت)',
+  profit:'فاصله اعمال‌ها منهای مبلغ پرداختی (در اعمال وسط)', loss:'فقط مبلغ پرداختی', lk:'paid'},
+ {id:'shortfly', g:'fly', fa:'شورت باترفلای', en:'Short Butterfly',
+  legs:'فروش کال با اعمال پایین، خرید دو کال با اعمال وسط و فروش کال با اعمال بالا',
+  view:'حرکت شدید قیمت از اعمال وسط', cost:'با دریافت پول باز می‌شود (کردیت)',
+  profit:'مبلغ دریافتی', loss:'فاصله اعمال‌ها منهای مبلغ دریافتی', lk:'width'}
+];
+
+const LOSS_TEXT = {
+  paid:'فقط مبلغ پرداختی بابت ساخت استراتژی',
+  width:'فاصله اعمال‌ها منهای مبلغ دریافتی',
+  unl:'بسیار بزرگ (تقریباً نامحدود)',
+  stock:'ریزش قیمت سهم (پریمیوم کمی جبران می‌کند)'
+};
+
+/* ---------- سوال‌های مفهومی ---------- */
+const M = [
+ {id:'m1', g:'basic', p:'اختیار خرید (Call) به خریدارش چه حقی می‌دهد؟',
+  c:'حق خرید دارایی پایه با قیمت اعمال تا سررسید', w:['تعهد به فروش دارایی پایه با قیمت اعمال','حق فروش دارایی پایه با قیمت اعمال','تعهد به خرید دارایی پایه در هر قیمتی'],
+  e:'خریدار کال «حق» دارد (نه تعهد). فروشنده کال است که در صورت اعمال متعهد به تحویل می‌شود.'},
+ {id:'m2', g:'basic', p:'اختیار فروش (Put) به خریدارش چه حقی می‌دهد؟',
+  c:'حق فروش دارایی پایه با قیمت اعمال تا سررسید', w:['حق خرید دارایی پایه با قیمت اعمال','تعهد به خرید دارایی پایه','تعهد به فروش دارایی پایه'],
+  e:'خریدار پوت از ریزش قیمت سود می‌کند چون می‌تواند گران‌تر از بازار بفروشد.'},
+ {id:'m3', g:'spread', p:'نقطه سر‌به‌سر (Break-even) در Bull Call Spread کجاست؟',
+  c:'اعمال پایین به‌علاوه مبلغ پرداختی', w:['اعمال بالا منهای مبلغ پرداختی','اعمال بالا به‌علاوه مبلغ پرداختی','اعمال پایین منهای مبلغ پرداختی'],
+  e:'باید قیمت از اعمال پایین بالاتر برود تا مبلغی که پرداختی را جبران کند.'},
+ {id:'m4', g:'spread', p:'کدام استراتژی با «دریافت پول» باز می‌شود (کردیت)؟',
+  c:'بر کال اسپرد (Bear Call Spread)', w:['بول کال اسپرد (Bull Call Spread)','لانگ استرادل (Long Straddle)','لانگ استرنگل (Long Strangle)'],
+  e:'در بر کال اسپرد کالِ گران‌تر (اعمال پایین) را می‌فروشی و کالِ ارزان‌تر را می‌خری، پس خالصِ دریافتی داری.'},
+ {id:'m5', g:'vol', p:'کدام استراتژی با «پرداخت پول» باز می‌شود (دبیت)؟',
+  c:'لانگ استرادل (Long Straddle)', w:['شورت استرادل (Short Straddle)','شورت استرنگل (Short Strangle)','بول پوت اسپرد (Bull Put Spread)'],
+  e:'هر جا خریدِ اختیار باشد و فروشی در کار نباشد، خالصِ پرداختی داری. سه گزینه دیگر کردیت‌اند.'},
+ {id:'m6', g:'vol', p:'کدام استراتژی ریسک تقریباً نامحدود دارد؟',
+  c:'شورت استرادل (Short Straddle)', w:['بول کال اسپرد (Bull Call Spread)','لانگ استرادل (Long Straddle)','لانگ باترفلای (Long Butterfly)'],
+  e:'فروش کال و پوت لخت، بدون هیچ پوششی. با حرکت شدید قیمت ضرر خیلی بزرگ می‌شود.'},
+ {id:'m7', g:'basic', p:'فروشنده اختیار (موقعیت Short) در بازار ایران برای باز کردن موقعیت چه چیزی باید بسپارد؟',
+  c:'وجه تضمین', w:['هیچ چیز، چون پریمیوم را می‌گیرد','فقط کارمزد معامله','کل مبلغ سهم پایه به خریدار'],
+  e:'چون فروشنده متعهد است، کارگزاری از او وجه تضمین می‌گیرد و ممکن است در نوسان شدید افزایش دهد (call margin).'},
+ {id:'m8', g:'vol', p:'چرا Long Strangle معمولاً ارزان‌تر از Long Straddle است؟',
+  c:'چون هر دو اختیار خارج از سود (OTM) هستند', w:['چون فقط یک اختیار می‌خری','چون اعمال هر دو یکی است','چون سررسیدش کوتاه‌تر است'],
+  e:'ارزان‌تر است ولی قیمت باید حرکت بیشتری بکند تا سود کنی.'},
+ {id:'m9', g:'fly', p:'لانگ باترفلای وقتی بیشترین سود را می‌دهد که...',
+  c:'قیمت در سررسید دقیقاً روی اعمال وسط باشد', w:['قیمت خیلی بالا برود','قیمت خیلی پایین برود','قیمت از اعمال پایین هم پایین‌تر شود'],
+  e:'باترفلای شرطی روی «ثابت ماندن» است؛ بیشترین سود در اعمال وسط است و ریسکش فقط مبلغ پرداختی.'},
+ {id:'m10', g:'spread', p:'حداکثر سود Bull Call Spread چقدر است؟',
+  c:'فاصله دو اعمال منهای مبلغ پرداختی', w:['نامحدود','فقط مبلغ پرداختی','فاصله دو اعمال به‌علاوه مبلغ پرداختی'],
+  e:'بالای اعمال بالا، کالِ فروخته‌شده جلوی سود را می‌گیرد، پس سود سقف دارد.'},
+ {id:'m11', g:'basic', p:'گذر زمان (Time decay / تتا) معمولاً به نفع کیست؟',
+  c:'فروشنده اختیار', w:['خریدار اختیار','هر دو به یک اندازه','هیچ‌کدام'],
+  e:'با نزدیک شدن به سررسید، ارزش زمانی اختیار کم می‌شود؛ این به نفع فروشنده و ضرر خریدار است.'},
+ {id:'m12', g:'basic', p:'در اسپردها، «اعمال پایین» یعنی...',
+  c:'قیمت اعمال کوچک‌تر بین دو اعمال', w:['اختیاری که ارزانتر است','اختیاری که زودتر سررسید می‌شود','اختیاری که حجم کمتری دارد'],
+  e:'اسم‌ها به قیمت اعمال (Strike) اشاره دارند، نه قیمت پریمیوم یا سررسید.'},
+ {id:'m13', g:'cc', p:'ریسک اصلی Covered Call چیست؟',
+  c:'ریزش سهم و محدود شدن سود صعودی', w:['ضرر نامحدود از رشد سهم','ضرر فقط به اندازه پریمیوم','هیچ ریسکی ندارد'],
+  e:'سهم را داری، پس از ریزش ضرر می‌کنی؛ و چون کال فروخته‌ای، سود صعودی‌ات تا اعمال محدود می‌شود.'}
+];
+
+const FILTERS = [
+  {k:'all', t:'همه'}, {k:'spread', t:'اسپردها'}, {k:'vol', t:'استرادل و استرنگل'},
+  {k:'cc', t:'کاورد کال'}, {k:'fly', t:'باترفلای'}, {k:'basic', t:'مفاهیم'}, {k:'wrong', t:'مرور اشتباه‌ها'}
+];
+
+/* ---------- ابزار ---------- */
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const label = s => s.fa;
+
+function card(s){
+  return '<div class="hd"><span class="n">'+s.fa+'</span><span class="e">'+s.en+'</span></div>'+
+   '<div class="info">'+
+   '<div><span>موقعیت‌ها: </span>'+s.legs+'</div>'+
+   '<div><span>دیدگاه: </span>'+(s.vs||s.view)+'</div>'+
+   '<div><span>شروع: </span>'+s.cost+'</div>'+
+   '<div><span>حداکثر سود: </span>'+s.profit+'</div>'+
+   '<div><span>حداکثر ضرر: </span>'+s.loss+'</div></div>';
+}
+
+/* ---------- ساخت سوال‌ها ---------- */
+function buildQuestions(){
+  const Q = [];
+  S.forEach(s => {
+    const others = S.filter(o => o.id !== s.id);
+    const sim = others.filter(o => o.g === s.g), oth = others.filter(o => o.g !== s.g);
+    const mk = (type, prompt, ok, fn) => Q.push({
+      id: s.id+':'+type, g: s.g, prompt, ok,
+      sim: sim.map(fn).filter(x => x !== ok), oth: oth.map(fn).filter(x => x !== ok),
+      explain: card(s), sub: type === 'name'
+    });
+    mk('legs', '«'+s.fa+'» از چه موقعیت‌هایی ساخته می‌شود؟', s.legs, o => o.legs);
+    mk('name', 'این ترکیب کدام استراتژی است؟\n'+s.legs, s.fa, o => o.fa);
+    mk('view', 'دیدگاه بازار برای «'+s.fa+'» چیست؟', s.view, o => o.view);
+    Q.push({
+      id: s.id+':loss', g: s.g, prompt: 'حداکثر ضرر «'+s.fa+'» چیست؟', ok: LOSS_TEXT[s.lk],
+      sim: [], oth: Object.keys(LOSS_TEXT).filter(k => k !== s.lk).map(k => LOSS_TEXT[k]), explain: card(s)
+    });
+  });
+  M.forEach(m => Q.push({id:m.id, g:m.g, prompt:m.p, ok:m.c, sim:m.w, oth:[], explain:'<div class="info">'+m.e+'</div>'}));
+  return Q;
+}
+const ALL = buildQuestions();
+const NAMES = {}; S.forEach(s => NAMES[s.fa] = s.en);
+
+/* ---------- ذخیره ---------- */
+let store = {wrong:{}, ok:0, all:0, streak:0};
+try{ const raw = localStorage.getItem('optquiz_v1'); if(raw) store = Object.assign(store, JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem('optquiz_v1', JSON.stringify(store)); }catch(e){} }
+
+/* ---------- جریان آزمون ---------- */
+let filter = 'all', pool = [], idx = 0, locked = false, sessionOk = 0, sessionStreak = store.streak || 0;
+
+function renderChips(){
+  $('chips').innerHTML = '';
+  FILTERS.forEach(f => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (f.k === filter ? ' on' : '');
+    b.textContent = f.t;
+    b.onclick = () => { filter = f.k; start(); };
+    $('chips').appendChild(b);
+  });
+}
+function updateStats(){
+  $('sOk').textContent = store.ok; $('sAll').textContent = store.all;
+  $('sStreak').textContent = sessionStreak;
+  $('sWrong').textContent = Object.keys(store.wrong).length;
+}
+function start(){
+  renderChips();
+  let list = ALL;
+  if(filter === 'wrong') list = ALL.filter(q => store.wrong[q.id]);
+  else if(filter !== 'all') list = ALL.filter(q => q.g === filter);
+  pool = shuffle(list); idx = 0; sessionOk = 0;
+  updateStats();
+  if(!pool.length){
+    $('prog').style.width = '0';
+    $('qcard').innerHTML = '<div class="center"><p>هنوز اشتباهی ثبت نشده 🎉</p><button class="btn" id="goAll">شروع آزمون کامل</button></div>';
+    $('goAll').onclick = () => { filter = 'all'; start(); };
+    return;
+  }
+  show();
+}
+function show(){
+  locked = false;
+  const q = pool[idx];
+  $('prog').style.width = (idx / pool.length * 100) + '%';
+  const pick = shuffle(q.sim).slice(0, 2).concat(shuffle(q.oth));
+  const wrong = []; pick.forEach(x => { if(wrong.indexOf(x) < 0 && x !== q.ok) wrong.push(x); });
+  // اگر کم بود از بقیه تکمیل شود
+  shuffle(q.sim.concat(q.oth)).forEach(x => { if(wrong.length < 3 && wrong.indexOf(x) < 0 && x !== q.ok) wrong.push(x); });
+  const opts = shuffle([q.ok].concat(wrong.slice(0, 3)));
+
+  const box = $('qcard');
+  box.innerHTML = '';
+  const p = document.createElement('p'); p.className = 'q'; p.textContent = q.prompt; box.appendChild(p);
+  opts.forEach(o => {
+    const b = document.createElement('button'); b.className = 'opt';
+    b.textContent = o;
+    if(NAMES[o]){ const sp = document.createElement('span'); sp.className = 'sub'; sp.textContent = NAMES[o]; b.appendChild(sp); }
+    b.onclick = () => answer(b, o === q.ok, q, box);
+    box.appendChild(b);
+  });
+}
+function answer(btn, isOk, q, box){
+  if(locked) return; locked = true;
+  store.all++;
+  if(isOk){ store.ok++; sessionOk++; sessionStreak++; delete store.wrong[q.id]; }
+  else { sessionStreak = 0; store.wrong[q.id] = (store.wrong[q.id] || 0) + 1; }
+  store.streak = sessionStreak; save(); updateStats();
+  box.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    const txt = b.firstChild.textContent;
+    if(txt === q.ok) b.classList.add('ok');
+  });
+  if(!isOk) btn.classList.add('bad');
+  const fb = document.createElement('div'); fb.className = 'fb';
+  fb.innerHTML = '<div class="res '+(isOk?'ok':'bad')+'">'+(isOk?'درست ✓':'نادرست ✗')+'</div>'+q.explain;
+  box.appendChild(fb);
+  const nx = document.createElement('button'); nx.className = 'btn';
+  nx.textContent = (idx + 1 < pool.length) ? 'سوال بعدی' : 'پایان آزمون';
+  nx.onclick = () => { idx++; if(idx < pool.length) show(); else finish(); };
+  box.appendChild(nx);
+  nx.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function finish(){
+  $('prog').style.width = '100%';
+  $('qcard').innerHTML = '<div class="center"><div>نتیجه این دور</div><div class="big">'+sessionOk+' از '+pool.length+'</div>'+
+    '<button class="btn" id="again">دور جدید</button>'+
+    '<button class="btn alt" id="rev">مرور اشتباه‌ها</button></div>';
+  $('again').onclick = start;
+  $('rev').onclick = () => { filter = 'wrong'; start(); };
+}
+
+/* ---------- خلاصه استراتژی‌ها ---------- */
+function renderSheet(){
+  $('sheet').innerHTML = '<div class="card info">منظور از اعمال، قیمت اعمال سهم یا strike است</div>' +
+    S.map(s => '<div class="card">'+card(s)+'</div>').join('');
+}
+
+/* ---------- تب‌ها ---------- */
+function tab(which){
+  $('quiz').classList.toggle('hide', which !== 'quiz');
+  $('sheet').classList.toggle('hide', which !== 'sheet');
+  $('tabQuiz').classList.toggle('on', which === 'quiz');
+  $('tabSheet').classList.toggle('on', which === 'sheet');
+}
+$('tabQuiz').onclick = () => tab('quiz');
+$('tabSheet').onclick = () => tab('sheet');
+
+renderSheet();
+start();
+if('serviceWorker' in navigator && location.protocol.indexOf('http') === 0){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
